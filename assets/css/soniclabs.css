@@ -45,6 +45,7 @@ body {
 h1, h2, h3 { color: var(--sf-dark); font-weight: 700; }
 h1 { font-size: 3rem; line-height: 1.2; }
 h2 {
+  display: inline-block;
   font-size: 2rem;
   font-weight: 600;
   margin-bottom: 25px;
