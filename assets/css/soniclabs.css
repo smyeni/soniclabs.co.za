@@ -44,21 +44,25 @@ body {
 /* Typography */
 h1, h2, h3 { color: var(--sf-dark); font-weight: 700; }
 h1 { font-size: 3rem; line-height: 1.2; }
-h2 { 
-  font-size: 2.4rem; 
-  margin-bottom: 50px; 
+h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 25px;
+  padding-bottom: 8px;
   position: relative;
-  padding-bottom: 15px;
+  color: var(--sf-dark);
 }
+
 h2::after {
   content: '';
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 60px;
-  height: 4px;
+  width: 50px;
+  height: 2px;
   background: var(--sf-gold);
 }
+
 .center-title { text-align: center; }
 .center-title h2::after { left: 50%; transform: translateX(-50%); }
 
