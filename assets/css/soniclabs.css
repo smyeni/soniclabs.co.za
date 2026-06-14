@@ -165,7 +165,7 @@ main { flex: 1; }
 .site-footer {
   background: var(--sf-dark);
   color: var(--sf-text-muted);
-  padding: 50px 20px;
+  padding: 15px 20px;
   text-align: center;
   margin-top: auto;
 }
@@ -182,6 +182,11 @@ main { flex: 1; }
 .site-footer .group { 
   margin-top: 20px; 
   font-size: 14px; 
+}
+
+.site-footer p {
+  margin: 0.25rem 0;
+  line-height: 1.3;
 }
 
 /* Utilities */
