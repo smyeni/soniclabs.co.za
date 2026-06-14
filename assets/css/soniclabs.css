@@ -1,49 +1,203 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Sonic Labs | Innovation Playground</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #f9f9f9; }
-    header { background: #0a1f44; color: #fff; padding: 20px; text-align: center; }
-    h1 { margin: 0; font-size: 2rem; }
-    nav { margin-top: 10px; }
-    nav a { color: #fff; margin: 0 10px; text-decoration: none; }
-    nav a:hover { text-decoration: underline; }
-    main { max-width: 800px; margin: 40px auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-    h2 { color: #0077cc; }
-    ul { list-style: none; padding: 0; }
-    li { margin: 10px 0; }
-    footer { text-align: center; padding: 20px; font-size: 0.85rem; color: #666; }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>Sonic Labs (Pty) Ltd</h1>
-    <nav>
-      <a href="experiments/dynamic-table.html">Dynamic Table Demo</a>
-      <a href="experiments/thanks.html">Thank You Page Demo</a>
-      <a href="experiments/contact.html">Contact Form Demo</a>
-    </nav>
-  </header>
+/* /assets/css/soniclabs.css */
+/* Sonic Labs - Global Stylesheet */
+/* Used on: public site + client portal */
 
-  <main>
-    <h2>Welcome to Sonic Labs</h2>
-    <p>
-      Sonic Labs is our innovation playground — a safe environment for web development experiments, 
-      proof‑of‑concepts, and technical showcases. Here we explore DOM manipulation, modular JavaScript, 
-      and production‑ready workflows that de‑risk projects before they scale.
-    </p>
-    <h3>Current Experiments</h3>
-    <ul>
-      <li><a href="experiments/dynamic-table.html">Dynamic Table with LocalStorage</a></li>
-      <li><a href="experiments/thanks.html">Personalized Thank You Page</a></li>
-      <li><a href="experiments/contact.html">Form Handling & Redirect</a></li>
-    </ul>
-  </main>
+:root {
+  /* Brand Colors */
+  --sf-dark: #111111;
+  --sf-gold: #FFB800;
+  --sf-gold-hover: #FFA000;
+  --sf-orange: #FF6B00;
+  --sf-text: #1A1A1A;
+  --sf-text-light: #666666;
+  --sf-text-muted: #888888;
+  --sf-white: #FFFFFF;
+  --sf-border: #E0E0E0;
+  --sf-bg-light: #F7F7F7;
+  --sf-success: #16A34A;
+  
+  /* Layout */
+  --header-height: 64px;
+  --container-width: 1200px;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+}
 
-  <footer>
-    &copy; 2026 Sonic Labs (Pty) Ltd. All rights reserved.
-  </footer>
-</body>
-</html>
+/* Reset & Base */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body { 
+  font-family: var(--font);
+  line-height: 1.6; 
+  color: var(--sf-text);
+  background: var(--sf-white);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container { 
+  max-width: var(--container-width); 
+  margin: 0 auto; 
+  padding: 0 20px; 
+}
+
+/* Typography */
+h1, h2, h3 { color: var(--sf-dark); font-weight: 700; }
+h1 { font-size: 3rem; line-height: 1.2; }
+h2 { 
+  font-size: 2.4rem; 
+  margin-bottom: 50px; 
+  position: relative;
+  padding-bottom: 15px;
+}
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background: var(--sf-gold);
+}
+.center-title { text-align: center; }
+.center-title h2::after { left: 50%; transform: translateX(-50%); }
+
+p { margin-bottom: 1rem; }
+
+/* Header - Used site-wide */
+.site-header { 
+  background: var(--sf-dark); 
+  color: var(--sf-white); 
+  padding: 15px 0;
+  border-bottom: 3px solid var(--sf-gold);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+}
+
+.site-header nav { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+}
+
+.logo { 
+  font-size: 1.8rem; 
+  font-weight: 800; 
+  letter-spacing: -1px; 
+}
+
+.logo span { color: var(--sf-gold); }
+
+.nav-links { 
+  display: flex; 
+  gap: 30px; 
+}
+
+.nav-links a { 
+  color: #ddd; 
+  text-decoration: none; 
+  font-weight: 500;
+  font-size: 15px;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover, 
+.nav-links a.active { color: var(--sf-gold); }
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  background: var(--sf-gold);
+  color: var(--sf-dark);
+  padding: 16px 36px;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 16px;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.btn:hover { 
+  background: var(--sf-gold-hover); 
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--sf-text);
+  border: 1px solid var(--sf-border);
+}
+
+.btn-secondary:hover {
+  background: var(--sf-bg-light);
+}
+
+/* Grid System */
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 40px;
+}
+
+/* Cards */
+.card {
+  background: var(--sf-white);
+  padding: 35px;
+  border: 1px solid var(--sf-border);
+  border-top: 4px solid var(--sf-gold);
+}
+
+.card h3 { 
+  margin-bottom: 15px; 
+  color: var(--sf-dark); 
+  font-size: 1.4rem; 
+}
+
+/* Sections */
+section { padding: 90px 20px; }
+main { flex: 1; }
+
+/* Footer - Used site-wide */
+.site-footer {
+  background: var(--sf-dark);
+  color: var(--sf-text-muted);
+  padding: 50px 20px;
+  text-align: center;
+  margin-top: auto;
+}
+
+.site-footer a { 
+  color: var(--sf-gold); 
+  text-decoration: none; 
+}
+
+.site-footer a:hover {
+  text-decoration: underline;
+}
+
+.site-footer .group { 
+  margin-top: 20px; 
+  font-size: 14px; 
+}
+
+/* Utilities */
+.text-center { text-align: center; }
+.mt-1 { margin-top: 1rem; }
+.mt-2 { margin-top: 2rem; }
+
+/* Mobile */
+@media (max-width: 768px) {
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 2rem; }
+  .nav-links { 
+    flex-wrap: wrap;
+    gap: 15px; 
+    font-size: 14px;
+  }
+  section { padding: 60px 20px; }
+  .grid-3 { gap: 25px; }
+}
