@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dynamic Enquiry Table</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+    th { background: #f4f4f4; }
+    form { margin-top: 30px; }
+    input, select, button { margin: 8px 0; padding: 10px; font-size: 14px; }
+    button { background: #0077cc; color: #fff; border: none; cursor: pointer; }
+    button:hover { background: #005fa3; }
+  </style>
+</head>
+<body>
+  <h2>Enquiry Log</h2>
+  <table id="enquiryTable">
+    <tr>
+      <th>Name</th>
+      <th>Company</th>
+      <th>Project Type</th>
+    </tr>
+  </table>
+
+  <h3>Submit Enquiry</h3>
+  <form id="contactForm">
+    <input type="text" id="name" placeholder="Full Name" required>
+    <input type="text" id="company" placeholder="Company" required>
+    <select id="project_type" required>
+      <option value="">Select...</option>
+      <option value="Maintenance">Maintenance</option>
+      <option value="Fabrication">Fabrication</option>
+      <option value="Shutdown">Shutdown</option>
+      <option value="CAPEX Project">CAPEX Project</option>
+      <option value="Vendor Registration">Vendor Registration</option>
+      <option value="Other">Other</option>
+    </select>
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const form = document.getElementById("contactForm");
+      const table = document.getElementById("enquiryTable");
+
+      // Load existing entries from localStorage
+      const savedEntries = JSON.parse(localStorage.getItem("enquiries")) || [];
+      savedEntries.forEach(entry => addRow(entry.name, entry.company, entry.project));
+
+      form.addEventListener("submit", function(e) {
+        e.preventDefault(); // stop actual submission
+
+        const name = document.getElementById("name").value;
+        const company = document.getElementById("company").value;
+        const project = document.getElementById("project_type").value;
+
+        // Add row to table
+        addRow(name, company, project);
+
+        // Save to localStorage
+        savedEntries.push({ name, company, project });
+        localStorage.setItem("enquiries", JSON.stringify(savedEntries));
+
+        form.reset();
+      });
+
+      function addRow(name, company, project) {
+        const row = document.createElement("tr");
+
+        const nameCell = document.createElement("td");
+        nameCell.textContent = name;
+
+        const companyCell = document.createElement("td");
+        companyCell.textContent = company;
+
+        const projectCell = document.createElement("td");
+        projectCell.textContent = project;
+
+        row.appendChild(nameCell);
+        row.appendChild(companyCell);
+        row.appendChild(projectCell);
+
+        table.appendChild(row);
+      }
+    });
+  </script>
+</body>
+</html>
