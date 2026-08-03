@@ -1,0 +1,213 @@
+/* /assets/css/soniclabs.css */
+/* Sonic Labs - Global Stylesheet */
+/* Used on: public site + client portal */
+
+:root {
+  /* Brand Colors */
+  --sf-dark: #111111;
+  --sf-gold: #FFB800;
+  --sf-gold-hover: #FFA000;
+  --sf-orange: #FF6B00;
+  --sf-text: #1A1A1A;
+  --sf-text-light: #666666;
+  --sf-text-muted: #888888;
+  --sf-white: #FFFFFF;
+  --sf-border: #E0E0E0;
+  --sf-bg-light: #F7F7F7;
+  --sf-success: #16A34A;
+  
+  /* Layout */
+  --header-height: 64px;
+  --container-width: 1200px;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+}
+
+/* Reset & Base */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body { 
+  font-family: var(--font);
+  line-height: 1.6; 
+  color: var(--sf-text);
+  background: var(--sf-white);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container { 
+  max-width: var(--container-width); 
+  margin: 0 auto; 
+  padding: 0 20px; 
+}
+
+/* Typography */
+h1, h2, h3 { color: var(--sf-dark); font-weight: 700; }
+h1 { font-size: 3rem; line-height: 1.2; }
+h2 {
+  display: inline-block;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 25px;
+  padding-bottom: 8px;
+  position: relative;
+  color: var(--sf-dark);
+}
+
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--sf-gold);
+}
+
+.center-title { text-align: center; }
+.center-title h2::after { left: 50%; transform: translateX(-50%); }
+
+p { margin-bottom: 1rem; }
+
+/* Header - Used site-wide */
+.site-header { 
+  background: var(--sf-dark); 
+  color: var(--sf-white); 
+  padding: 15px 0;
+  border-bottom: 3px solid var(--sf-gold);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+}
+
+.site-header nav { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+}
+
+.logo { 
+  font-size: 1.8rem; 
+  font-weight: 800; 
+  letter-spacing: -1px; 
+}
+
+.logo span { color: var(--sf-gold); }
+
+.nav-links { 
+  display: flex; 
+  gap: 30px; 
+}
+
+.nav-links a { 
+  color: #ddd; 
+  text-decoration: none; 
+  font-weight: 500;
+  font-size: 15px;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover, 
+.nav-links a.active { color: var(--sf-gold); }
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  background: var(--sf-gold);
+  color: var(--sf-dark);
+  padding: 16px 36px;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 16px;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.btn:hover { 
+  background: var(--sf-gold-hover); 
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--sf-text);
+  border: 1px solid var(--sf-border);
+}
+
+.btn-secondary:hover {
+  background: var(--sf-bg-light);
+}
+
+/* Grid System */
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 40px;
+}
+
+/* Cards */
+.card {
+  background: var(--sf-white);
+  padding: 35px;
+  border: 1px solid var(--sf-border);
+  border-top: 4px solid var(--sf-gold);
+}
+
+.card h3 { 
+  margin-bottom: 15px; 
+  color: var(--sf-dark); 
+  font-size: 1.4rem; 
+}
+
+/* Sections */
+section { padding: 90px 20px; }
+main { flex: 1; }
+
+/* Footer - Used site-wide */
+.site-footer {
+  background: var(--sf-dark);
+  color: var(--sf-text-muted);
+  padding: 15px 20px;
+  text-align: center;
+  margin-top: auto;
+}
+
+.site-footer a { 
+  color: var(--sf-gold); 
+  text-decoration: none; 
+}
+
+.site-footer a:hover {
+  text-decoration: underline;
+}
+
+.site-footer .group { 
+  margin-top: 20px; 
+  font-size: 14px; 
+}
+
+.site-footer p {
+  margin: 0.25rem 0;
+  line-height: 1.3;
+}
+
+/* Utilities */
+.text-center { text-align: center; }
+.mt-1 { margin-top: 1rem; }
+.mt-2 { margin-top: 2rem; }
+
+/* Mobile */
+@media (max-width: 768px) {
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 2rem; }
+  .nav-links { 
+    flex-wrap: wrap;
+    gap: 15px; 
+    font-size: 14px;
+  }
+  section { padding: 60px 20px; }
+  .grid-3 { gap: 25px; }
+}
