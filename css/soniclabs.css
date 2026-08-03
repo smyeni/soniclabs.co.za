@@ -39,6 +39,26 @@ body {
     padding:50px 25px;  
 }
 
+blockquote{
+
+    max-width:700px;
+
+    margin:50px auto;
+
+    font-size:2rem;
+
+    font-style:italic;
+
+    text-align:center;
+
+    color:#222;
+
+    border-left:5px solid var(--sf-gold);
+
+    padding-left:30px;
+
+}
+
 .container { 
   max-width: var(--container-width); 
   margin: 0 auto; 
@@ -217,4 +237,9 @@ main { flex: 1; }
   }
   section { padding: 60px 20px; }
   .grid-3 { gap: 25px; }
+}
+
+.keyword{
+    color:var(--sf-orange);
+    font-weight:700;
 }
