@@ -43,8 +43,8 @@ blockquote{
 
     max-width:700px;
 
-    margin:50px auto;
-
+    margin: 25px auto 40px;
+  
     font-size:2rem;
 
     font-style:italic;
@@ -72,7 +72,8 @@ h2 {
   display: inline-block;
   font-size: 2rem;
   font-weight: 600;
-  margin-bottom: 25px;
+  margin-top: 55px;
+  margin-bottom: 18px;
   padding-bottom: 8px;
   position: relative;
   color: var(--sf-dark);
@@ -92,8 +93,13 @@ h2::after {
 .center-title h2::after { left: 50%; transform: translateX(-50%); }
 
 p {
-  margin-bottom: 1.5rem;
-  line-height:1.9;
+  margin-bottom: 1.2rem;
+  line-height: 1.8;
+}
+
+.page-header {
+    padding: 80px 20px 60px;
+    text-align: center;
 }
 
 /* Header - Used site-wide */
@@ -113,6 +119,8 @@ p {
   justify-content: space-between; 
   align-items: center;
 }
+
+
 
 .logo { 
   font-size: 1.8rem; 
@@ -137,6 +145,10 @@ p {
 
 .nav-links a:hover, 
 .nav-links a.active { color: var(--sf-gold); }
+
+.page-content section {
+    padding: 40px 0;
+}
 
 /* Buttons */
 .btn {
