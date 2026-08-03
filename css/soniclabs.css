@@ -34,28 +34,30 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-    max-width:900px;
-    margin:auto;
-    padding:50px 25px;  
+  max-width:900px;
+  margin:auto;
+  padding:50px 25px;  
 }
 
 blockquote{
 
     max-width:700px;
 
-    margin: 25px auto 40px;
+    margin: 30px 0;
   
     font-size:2rem;
 
     font-style:italic;
 
-    text-align:center;
+    text-align:left;
 
     color:#222;
 
     border-left:5px solid var(--sf-gold);
 
     padding-left:30px;
+
+    height: 90px;
 
 }
 
@@ -98,8 +100,16 @@ p {
 }
 
 .page-header {
-    padding: 80px 20px 60px;
+    padding: 70px 20px 35px;
     text-align: center;
+}
+
+.page-header h1{
+    margin-bottom: 0.2rem;
+}
+
+.page-header .subtitle{
+    margin-bottom:0;
 }
 
 /* Header - Used site-wide */
