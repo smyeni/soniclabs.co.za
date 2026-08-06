@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sonic Home – Gas Specs | Engineer Data Pack</title>
+    
+    <!-- Google Fonts – clean, engineer-friendly -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    
+    <style>
+        /* --- RESET & BASE --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #f5f5f0;
+            font-family: 'Inter', sans-serif;
+            color: #141414;
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            background: white;
+            padding: 3rem 3.5rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.06);
+            border: 1px solid #e8e8e0;
+        }
+        
+        /* --- HEADER --- */
+        .header {
+            border-bottom: 3px solid #b42828;
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .header h1 {
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 700;
+            font-size: 2.2rem;
+            letter-spacing: -0.5px;
+            color: #141414;
+        }
+        
+        .header h1 span {
+            color: #b42828;
+        }
+        
+        .header .sub {
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 400;
+            font-size: 1rem;
+            color: #666;
+            background: #f0f0ea;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+        }
+        
+        /* --- QR SECTION --- */
+        .qr-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2.5rem;
+            align-items: center;
+            background: #fafaf8;
+            padding: 2rem 2rem;
+            border-radius: 10px;
+            border: 1px solid #e0e0d8;
+            margin-bottom: 2.5rem;
+        }
+        
+        .qr-section img {
+            width: 200px;
+            height: 200px;
+            border: 3px solid #141414;
+            border-radius: 8px;
+            background: white;
+            flex-shrink: 0;
+        }
+        
+        .qr-meta {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+        
+        .qr-meta .label {
+            font-weight: 700;
+            color: #b42828;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+        }
+        
+        .qr-meta .url {
+            color: #b42828;
+            word-break: break-all;
+        }
+        
+        .qr-meta .note {
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+        }
+        
+        /* --- SPEC TABLE --- */
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            margin: 1.5rem 0 2rem 0;
+        }
+        
+        .spec-table th {
+            text-align: left;
+            background: #141414;
+            color: white;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .spec-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e8e8e0;
+            vertical-align: top;
+        }
+        
+        .spec-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .spec-table .brand-cadac {
+            color: #b42828;
+            font-weight: 700;
+        }
+        
+        .spec-table .brand-other {
+            color: #444;
+        }
+        
+        .spec-table .cert {
+            background: #eef4ea;
+            color: #2d5a1e;
+            font-size: 0.7rem;
+            padding: 0.15rem 0.6rem;
+            border-radius: 12px;
+            display: inline-block;
+            font-weight: 600;
+        }
+        
+        /* --- RISK STATEMENT --- */
+        .risk-box {
+            background: #faf8f5;
+            border-left: 5px solid #b42828;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            border-radius: 0 6px 6px 0;
+        }
+        
+        .risk-box strong {
+            color: #b42828;
+        }
+        
+        /* --- BUTTONS --- */
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e8e8e0;
+        }
+        
+        .btn {
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.75rem 2rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #141414;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2a2a2a;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: #141414;
+            border: 2px solid #141414;
+        }
+        
+        .btn-outline:hover {
+            background: #141414;
+            color: white;
+        }
+        
+        .btn-red {
+            background: #b42828;
+            color: white;
+        }
+        
+        .btn-red:hover {
+            background: #8f1f1f;
+        }
+        
+        /* --- FOOTER --- */
+        .footer {
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e8e8e0;
+            font-size: 0.8rem;
+            color: #888;
+            font-family: 'IBM Plex Mono', monospace;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        /* --- RESPONSIVE --- */
+        @media (max-width: 700px) {
+            .container {
+                padding: 1.5rem;
+            }
+            .header h1 {
+                font-size: 1.6rem;
+            }
+            .qr-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            .qr-section img {
+                width: 160px;
+                height: 160px;
+            }
+            .spec-table {
+                font-size: 0.7rem;
+            }
+            .spec-table th,
+            .spec-table td {
+                padding: 0.5rem 0.6rem;
+            }
+            .risk-box {
+                padding: 1rem 1.2rem;
+                font-size: 0.8rem;
+            }
+            .actions {
+                flex-direction: column;
+            }
+            .btn {
+                justify-content: center;
+            }
+        }
+        
+        @media print {
+            body { background: white; padding: 0.5rem; }
+            .container { box-shadow: none; border: 1px solid #ccc; }
+            .btn { display: none; }
+            .qr-section { background: #f9f9f7; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <h1>SONIC <span>HOME</span></h1>
+        <div class="sub">TECH DATA PACK · v1.0</div>
+    </div>
+
+    <!-- QR + META -->
+    <div class="qr-section">
+        <!-- Replace src with your actual QR image -->
+        <img src="sonic_home_gas_qr.png" alt="QR Code – Sonic Home Gas Specs" />
+        <div class="qr-meta">
+            <div class="label">Scan to access</div>
+            <div style="font-weight:600; font-size:1.1rem;">Full Spec Sheet &amp; Certs</div>
+            <div class="url">https://sonicauto.co.za/gas-specs</div>
+            <div class="note">PDF download · Batch traceability · Test reports</div>
+        </div>
+    </div>
+
+    <!-- SYSTEM BOUNDARY STATEMENT -->
+    <div class="risk-box">
+        <strong>SYSTEM BOUNDARY:</strong><br />
+        Pressure envelope = <strong>CADAC only</strong> (100%)<br />
+        Cooker tops = CADAC · Alva · Totai <em style="color:#666;font-weight:400;">(choice, not substitution)</em><br /><br />
+        <strong>RISK STATEMENT:</strong><br />
+        Gas containment = single brand, full traceability.<br />
+        Combustion surface = decoupled, independently certified.<br />
+        <span style="color:#b42828;">No cross-brand mixing on pressure side.</span>
+    </div>
+
+    <!-- SPECIFICATION TABLE -->
+    <table class="spec-table">
+        <thead>
+            <tr>
+                <th>Component</th>
+                <th>Brand</th>
+                <th>Specification</th>
+                <th>Certification</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Cylinder</strong></td>
+                <td class="brand-cadac">CADAC</td>
+                <td>3kg–19kg, powder-coated steel</td>
+                <td><span class="cert">SABS EN ISO 3834</span></td>
+            </tr>
+            <tr>
+                <td><strong>Regulator</strong></td>
+                <td class="brand-cadac">CADAC</td>
+                <td>2.8 kPa fixed · EFV-equipped</td>
+                <td><span class="cert">SABS 1237</span></td>
+            </tr>
+            <tr>
+                <td><strong>Hose</strong></td>
+                <td class="brand-cadac">CADAC</td>
+                <td>Reinforced rubber · UV-stabilised</td>
+                <td><span class="cert">SABS 1151</span></td>
+            </tr>
+            <tr>
+                <td><strong>Connection</strong></td>
+                <td class="brand-cadac">CADAC</td>
+                <td>¾" BSP standardised</td>
+                <td><span class="cert">Factory pressure-tested</span></td>
+            </tr>
+            <tr>
+                <td><strong>Cooker Top</strong></td>
+                <td class="brand-other">CADAC / Alva / Totai</td>
+                <td>Multi-brand · SABS-certified</td>
+                <td><span class="cert">SABS</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- QUALITY CONTROLS -->
+    <div style="margin: 1.5rem 0; font-family:'IBM Plex Mono',monospace; font-size:0.85rem; background:#fafaf8; padding:1.2rem 1.8rem; border-radius:6px;">
+        <div style="font-weight:700; margin-bottom:0.5rem;">🔬 QUALITY CONTROLS</div>
+        <div style="display:grid; grid-template-columns:auto 1fr; gap:0.3rem 1.5rem; color:#333;">
+            <span style="font-weight:600;">Incoming:</span><span>Batch sampling · visual + thread integrity</span>
+            <span style="font-weight:600;">Pre-sale:</span><span>Bubble-test on every regulator + hose assembly</span>
+            <span style="font-weight:600;">Documentation:</span><span>Traceable batch numbers for all CADAC components</span>
+        </div>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="actions">
+        <a href="sonic_home_gas_specs.pdf" class="btn btn-primary" download>⬇ Download Full PDF</a>
+        <a href="#" class="btn btn-outline">📄 Request Batch Certs</a>
+        <a href="#" class="btn btn-red">📧 Contact Technical Team</a>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <span>Stall #[Your Number] · sonicauto.co.za</span>
+        <span>v1.0 · 2026</span>
+    </div>
+
+</div>
+
+</body>
+</html>
