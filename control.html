@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Control Systems | Sonic Labs</title>
+
+    <meta name="description"
+          content="Sonic Labs Control Systems — an independent engineering study of modern control, modelling, estimation, optimisation and real-time systems.">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.65;
+            background: #0b0f14;
+            color: #e7edf3;
+        }
+
+        header {
+            padding: 70px 24px;
+            background: linear-gradient(135deg, #101923, #172534);
+            border-bottom: 1px solid #2b3947;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: auto;
+            padding: 0 22px;
+        }
+
+        .eyebrow {
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 0.78rem;
+            color: #7dd3fc;
+            font-weight: bold;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            line-height: 1.05;
+            margin: 14px 0;
+        }
+
+        h2 {
+            margin-top: 55px;
+            font-size: 2rem;
+            color: #f1f5f9;
+        }
+
+        h3 {
+            color: #bae6fd;
+        }
+
+        p {
+            color: #c5d0da;
+        }
+
+        .hero-text {
+            max-width: 780px;
+            font-size: 1.2rem;
+        }
+
+        .tagline {
+            margin-top: 25px;
+            font-weight: bold;
+            color: #f8fafc;
+        }
+
+        main {
+            padding: 45px 0 80px;
+        }
+
+        .intro {
+            font-size: 1.1rem;
+            max-width: 850px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+            margin-top: 25px;
+        }
+
+        .card {
+            padding: 24px;
+            background: #111821;
+            border: 1px solid #263341;
+            border-radius: 12px;
+        }
+
+        .card strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #f8fafc;
+            font-size: 1.1rem;
+        }
+
+        .card p {
+            margin-bottom: 0;
+            font-size: 0.95rem;
+        }
+
+        .equation {
+            margin: 25px 0;
+            padding: 22px;
+            text-align: center;
+            font-family: Georgia, serif;
+            font-size: 1.4rem;
+            background: #101820;
+            border-left: 4px solid #7dd3fc;
+            border-radius: 6px;
+        }
+
+        .roadmap {
+            counter-reset: module;
+            list-style: none;
+            padding: 0;
+        }
+
+        .roadmap li {
+            counter-increment: module;
+            position: relative;
+            padding: 22px 22px 22px 72px;
+            margin-bottom: 12px;
+            background: #111821;
+            border: 1px solid #263341;
+            border-radius: 10px;
+        }
+
+        .roadmap li::before {
+            content: counter(module);
+            position: absolute;
+            left: 22px;
+            top: 22px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #1d4ed8;
+            color: white;
+            text-align: center;
+            line-height: 32px;
+            font-weight: bold;
+        }
+
+        .project {
+            padding: 28px;
+            margin-top: 25px;
+            background: #0f1a24;
+            border: 1px solid #31506a;
+            border-radius: 12px;
+        }
+
+        footer {
+            padding: 35px 20px;
+            text-align: center;
+            border-top: 1px solid #263341;
+            color: #8795a3;
+        }
+
+        footer strong {
+            color: #cbd5e1;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 50px 20px;
+            }
+
+            main {
+                padding-top: 30px;
+            }
+
+            .roadmap li {
+                padding-left: 62px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="container">
+
+        <div class="eyebrow">Sonic Labs · Engineering Study</div>
+
+        <h1>Control Systems</h1>
+
+        <p class="hero-text">
+            From classical feedback control to modern state-space,
+            estimation, optimisation, robust control, nonlinear systems
+            and real-time implementation.
+        </p>
+
+        <p class="tagline">
+            Learn the mathematics. Understand the physical system.
+            Build the controller.
+        </p>
+
+    </div>
+</header>
+
+<main>
+<div class="container">
+
+    <h2>Why Control Systems?</h2>
+
+    <p class="intro">
+        Control engineering is the discipline of making dynamic systems
+        behave the way we want them to behave.
+    </p>
+
+    <p>
+        A controller does not exist in isolation. It interacts with a
+        physical plant, sensors, actuators, disturbances, uncertainty
+        and computation.
+    </p>
+
+    <div class="equation">
+        Physical System → Measurement → Estimation → Control → Actuation
+    </div>
+
+    <p>
+        The Sonic Labs Control Systems study follows this complete
+        engineering loop rather than treating control theory as a
+        collection of mathematical recipes.
+    </p>
+
+
+    <h2>Control II Journey</h2>
+
+    <ol class="roadmap">
+
+        <li>
+            <h3>State-Space Modelling & MIMO Systems</h3>
+            <p>
+                State variables, state equations, matrix models,
+                multi-input multi-output systems, eigenvalues,
+                eigenvectors and physical interpretation.
+            </p>
+        </li>
+
+        <li>
+            <h3>Controllability & Observability</h3>
+            <p>
+                Understanding which states can be controlled and which
+                can be inferred from measurements.
+            </p>
+        </li>
+
+        <li>
+            <h3>State Feedback & Observers</h3>
+            <p>
+                Pole placement, state feedback, reference tracking,
+                observers and the separation between estimation and control.
+            </p>
+        </li>
+
+        <li>
+            <h3>Digital Control</h3>
+            <p>
+                Sampling, discrete-time models, Z-transforms,
+                discretisation and implementation of digital controllers.
+            </p>
+        </li>
+
+        <li>
+            <h3>System Identification</h3>
+            <p>
+                Learning mathematical models from measured system data,
+                parameter estimation and model validation.
+            </p>
+        </li>
+
+        <li>
+            <h3>Robust Control</h3>
+            <p>
+                Model uncertainty, sensitivity, disturbance rejection,
+                robustness and performance in uncertain systems.
+            </p>
+        </li>
+
+        <li>
+            <h3>Optimal Control</h3>
+            <p>
+                Cost functions, optimisation, Linear Quadratic Regulation
+                and the Riccati equation.
+            </p>
+        </li>
+
+        <li>
+            <h3>Nonlinear Control</h3>
+            <p>
+                Nonlinear models, equilibrium points, linearisation,
+                stability and nonlinear control techniques.
+            </p>
+        </li>
+
+        <li>
+            <h3>Intelligent & Advanced Control</h3>
+            <p>
+                Fuzzy control, neuro-fuzzy methods, genetic algorithms
+                and optimisation-based approaches.
+            </p>
+        </li>
+
+        <li>
+            <h3>Real-Time Control</h3>
+            <p>
+                Sensors, actuators, sampling, computation, timing,
+                embedded controllers and real-world implementation.
+            </p>
+        </li>
+
+    </ol>
+
+
+    <h2>The Mathematical Core</h2>
+
+    <p>
+        A central model in modern control is the state-space representation:
+    </p>
+
+    <div class="equation">
+        ẋ = Ax + Bu
+        <br><br>
+        y = Cx + Du
+    </div>
+
+    <p>
+        We will not treat these equations merely as notation.
+        Each matrix and state will be connected to the physical system
+        being modelled.
+    </p>
+
+
+    <h2>The Engineering Connection</h2>
+
+    <div class="grid">
+
+        <div class="card">
+            <strong>Electromagnetics</strong>
+            <p>
+                Physical fields, propagation, antennas and electromagnetic
+                systems provide the physical world in which signals exist.
+            </p>
+        </div>
+
+        <div class="card">
+            <strong>Signal Processing</strong>
+            <p>
+                Sensors produce signals. DSP extracts information from
+                those signals in the presence of noise.
+            </p>
+        </div>
+
+        <div class="card">
+            <strong>Control</strong>
+            <p>
+                Control theory uses system models and measurements to
+                determine how a dynamic system should respond.
+            </p>
+        </div>
+
+        <div class="card">
+            <strong>Embedded Systems</strong>
+            <p>
+                Real controllers ultimately have to run on hardware,
+                under timing, memory and sensor constraints.
+            </p>
+        </div>
+
+    </div>
+
+
+    <h2>Estimation & Control</h2>
+
+    <p>
+        An important theme of modern control is that the controller
+        frequently cannot directly observe every internal state of
+        the physical system.
+    </p>
+
+    <div class="equation">
+        Physical State → Sensors → Estimator → Estimated State → Controller
+    </div>
+
+    <p>
+        This creates a natural bridge between control theory,
+        signal processing and Kalman filtering.
+    </p>
+
+
+    <h2>Laboratory Philosophy</h2>
+
+    <p>
+        Every major theoretical concept should eventually become an
+        experiment.
+    </p>
+
+    <div class="grid">
+
+        <div class="card">
+            <strong>Model</strong>
+            <p>Develop the mathematical representation.</p>
+        </div>
+
+        <div class="card">
+            <strong>Simulate</strong>
+            <p>Observe the system computationally.</p>
+        </div>
+
+        <div class="card">
+            <strong>Analyse</strong>
+            <p>Understand stability, performance and limitations.</p>
+        </div>
+
+        <div class="card">
+            <strong>Implement</strong>
+            <p>Move the controller toward real hardware.</p>
+        </div>
+
+    </div>
+
+
+    <h2>Future Sonic Labs Projects</h2>
+
+    <div class="project">
+        <h3>DC Motor Control</h3>
+        <p>
+            Build a complete model of a motor, design a controller,
+            simulate its response and investigate digital implementation.
+        </p>
+    </div>
+
+    <div class="project">
+        <h3>MIMO Control</h3>
+        <p>
+            Develop and control a multi-variable system and explore
+            interactions between inputs and outputs.
+        </p>
+    </div>
+
+    <div class="project">
+        <h3>State Estimation</h3>
+        <p>
+            Introduce noisy measurements and build an estimator to
+            reconstruct hidden system states.
+        </p>
+    </div>
+
+    <div class="project">
+        <h3>Kalman Filtering</h3>
+        <p>
+            Connect stochastic modelling, estimation and feedback
+            into a complete state-estimation architecture.
+        </p>
+    </div>
+
+    <div class="project">
+        <h3>Real-Time Embedded Control</h3>
+        <p>
+            Take a simulated controller toward actual hardware,
+            sensors and actuators.
+        </p>
+    </div>
+
+
+    <h2>The Bigger Picture</h2>
+
+    <p>
+        Control Systems is not an isolated subject.
+        It sits at the intersection of several engineering disciplines.
+    </p>
+
+    <div class="equation">
+        Electromagnetics
+        ↔ Signal Processing
+        ↔ Control & Estimation
+        ↔ Embedded Systems
+    </div>
+
+    <p>
+        This is the engineering perspective explored at Sonic Labs:
+        understand the system, model it, measure it, compute on it,
+        control it and ultimately build it.
+    </p>
+
+
+    <h2>Study Status</h2>
+
+    <p>
+        <strong>Current stage:</strong>
+        Beginning Control II self-study.
+    </p>
+
+    <p>
+        <strong>Next:</strong>
+        State-space modelling and MIMO systems.
+    </p>
+
+</div>
+</main>
+
+<footer>
+    <strong>Sonic Labs</strong><br>
+    Engineering · Experimentation · Understanding
+</footer>
+
+</body>
+</html>
