@@ -1,6 +1,6 @@
 # Sonic Labs (Pty) Ltd
 
-Welcome to **Sonic Labs**, our science, math and engineering playground and web development laboratory.  
+Welcome to **Sonic Labs**, our science, math, engineering playground and web development laboratory.  
 This is where we experiment, learn, and share — openly and transparently.
 
 ---
