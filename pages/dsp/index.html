@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sonic Labs DSP Primer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Latin+Modern+Roman:ital,wght@0,400;0,700;1,400;1,700&family=Latin+Modern+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Code+Pro:wght@400;500&display=swap');
+
+  :root {
+    --text: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --accent: #1e3a5f;
+    --accent-light: #2c5282;
+    --border: #c9c9c9;
+    --bg: #fafafa;
+    --sidebar: #f0f0f0;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Crimson Pro', Georgia, 'Times New Roman', serif;
+    font-size: 17px;
+    line-height: 1.75;
+    color: var(--text);
+    background: var(--bg);
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Thesis-style container */
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 72px 96px 96px 96px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+    min-height: 100vh;
+  }
+
+  @media (max-width: 860px) {
+    .page { padding: 48px 32px; }
+  }
+
+  /* Header */
+  .masthead {
+    text-align: center;
+    margin-bottom: 64px;
+    padding-bottom: 32px;
+    border-bottom: 2px solid var(--accent);
+  }
+
+  .masthead .series {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .masthead h1 {
+    font-family: 'Crimson Pro', serif;
+    font-weight: 700;
+    font-size: 2.6em;
+    line-height: 1.15;
+    margin: 0 0 16px 0;
+    color: var(--text);
+    letter-spacing: -0.5px;
+  }
+
+  .masthead .subtitle {
+    font-style: italic;
+    font-size: 1.15em;
+    color: var(--text-secondary);
+    margin: 0;
+    font-weight: 400;
+  }
+
+  .masthead .meta {
+    margin-top: 24px;
+    font-size: 0.9em;
+    color: var(--text-secondary);
+  }
+
+  .masthead .meta a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .masthead .meta a:hover {
+    border-bottom-color: var(--accent);
+  }
+
+  /* Section headings */
+  h2 {
+    font-family: 'Crimson Pro', serif;
+    font-weight: 700;
+    font-size: 1.5em;
+    margin-top: 56px;
+    margin-bottom: 20px;
+    color: var(--accent);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+    letter-spacing: -0.3px;
+  }
+
+  h3 {
+    font-family: 'Crimson Pro', serif;
+    font-weight: 600;
+    font-size: 1.15em;
+    margin-top: 32px;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  /* Body text */
+  p {
+    margin: 0 0 18px 0;
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  /* The Sonic Labs voice — pull quotes */
+  .voice {
+    background: var(--sidebar);
+    border-left: 4px solid var(--accent);
+    padding: 20px 28px;
+    margin: 28px 0;
+    font-style: italic;
+    color: var(--text-secondary);
+    font-size: 1.05em;
+    line-height: 1.7;
+  }
+
+  .voice strong {
+    font-style: normal;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* Tables — thesis style */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    font-size: 0.95em;
+  }
+
+  th {
+    font-family: 'Crimson Pro', serif;
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 2px solid var(--accent);
+    color: var(--accent);
+    font-size: 0.9em;
+    letter-spacing: 0.3px;
+  }
+
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #e0e0e0;
+    vertical-align: top;
+  }
+
+  tr:last-child td {
+    border-bottom: 2px solid var(--accent);
+  }
+
+  /* Code / math */
+  code {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.85em;
+    background: #f4f4f4;
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+
+  .math {
+    display: block;
+    text-align: center;
+    margin: 24px 0;
+    font-style: italic;
+    font-size: 1.05em;
+    color: var(--text);
+    padding: 16px;
+    background: #f8f8f8;
+    border-radius: 4px;
+  }
+
+  /* Lists */
+  ul, ol {
+    margin: 16px 0;
+    padding-left: 28px;
+  }
+
+  li {
+    margin-bottom: 8px;
+  }
+
+  /* Divider */
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 48px 0;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 0.85em;
+    color: var(--text-secondary);
+    text-align: center;
+    font-style: italic;
+  }
+
+  /* Print styles */
+  @media print {
+    body { background: #fff; }
+    .page { box-shadow: none; max-width: 100%; padding: 48px; }
+    .voice { break-inside: avoid; }
+    h2, h3 { break-after: avoid; }
+    p { orphans: 3; widows: 3; }
+  }
+</style>
+<base target="_blank">
+</head>
+<body>
+
+<div class="page">
+
+<div class="masthead">
+  <div class="series">Sonic Labs Technical Note &mdash; No. 001</div>
+  <h1>The Intuition-First Guide to Digital Frequency, Sampling, and the FFT</h1>
+  <p class="subtitle">A conversation-driven refresher for engineers re-learning DSP</p>
+  <p class="meta">
+    <a href="https://SonicLabs.co.za">SonicLabs.co.za</a> &middot; August 2026
+  </p>
+</div>
+
+<h2>1. Digital Frequency: How Much of the Cycle Did We Miss?</h2>
+
+<p>Every time the ADC takes a sample, the analog signal has moved forward by some fraction of its own cycle. That fraction <em>is</em> the digital frequency.</p>
+
+<p><strong>Your running example:</strong> a 10 kHz tone sampled at 100 kHz. The signal's period is 100 µs; the sampler visits every 10 µs. Each sample catches the sine <strong>one-tenth of a cycle further along</strong> than the last. The digital frequency is therefore <strong>0.1 cycles per sample</strong> &mdash; or 36&deg; per sample, or &pi;/5 radians per sample. Same thing, different clothes.</p>
+
+<p>The formula, derived from intuition rather than decreed from above:</p>
+
+<div class="math">
+  T<sub>sampler</sub> / T<sub>signal</sub> = (1/f<sub>s</sub>) / (1/f<sub>0</sub>) = f<sub>0</sub> / f<sub>s</sub>
+</div>
+
+<p>This ratio quantifies how rapidly we are tracking the signal.</p>
+
+<div class="voice">
+  <strong>The Sonic Labs framing:</strong> "The lazier the sampler, the bigger the digital frequency. The more rapid the sampler, the tighter the visits back to the signal &mdash; you're basically stalking the signal."
+</div>
+
+<table>
+  <tr>
+    <th>Sampler "laziness"</th>
+    <th>f<sub>s</sub></th>
+    <th>Digital freq</th>
+    <th>What it looks like</th>
+  </tr>
+  <tr>
+    <td>Lazy (barely Nyquist)</td>
+    <td>20 kHz</td>
+    <td>0.5</td>
+    <td>Hop 180&deg; every sample &mdash; bounce between two points</td>
+  </tr>
+  <tr>
+    <td>Moderate (your plot)</td>
+    <td>100 kHz</td>
+    <td>0.1</td>
+    <td>Hop 36&deg; every sample &mdash; 10 hops to complete the circle</td>
+  </tr>
+  <tr>
+    <td>Greedy (oversampling)</td>
+    <td>1 MHz</td>
+    <td>0.01</td>
+    <td>Hop 3.6&deg; &mdash; barely any advance, stalking the signal</td>
+  </tr>
+</table>
+
+<h2>2. The Unit Circle as the Stage</h2>
+
+<p>Here is the central insight: the sine wave is merely the <em>shadow</em> of a dot traveling around a circle. The circle <em>is</em> the true signal. The sine wave is the side-view projection. The angle at any instant <em>is</em> the phase.</p>
+
+<h3>Sampling as strobe photography</h3>
+
+<p>Your ADC is a strobe light flashing at <code>f_s</code>. Every flash freezes the dot at some angle. You write down the shadow height (the sample value) and wait for the next flash.</p>
+
+<h3>What the angle means</h3>
+
+<ul>
+  <li><strong>0&deg;</strong> &mdash; just starting, shadow at centre, moving up</li>
+  <li><strong>90&deg;</strong> &mdash; top of circle, shadow at peak</li>
+  <li><strong>180&deg;</strong> &mdash; opposite side, shadow back at centre, moving down</li>
+  <li><strong>270&deg;</strong> &mdash; bottom, shadow at trough</li>
+  <li><strong>360&deg;</strong> &mdash; home again, cycle complete</li>
+</ul>
+
+<p>When we say "the signal advanced 36&deg; since the last sample," we are literally saying "the dot hopped one-tenth of the way around the circle."</p>
+
+<h3>Why the unit circle specifically?</h3>
+
+<p>Any circle would do, but radius = 1 makes the shadow heights exactly your sine and cosine values. The complex exponential <code>e^(j&theta;)</code> <em>is</em> that dot on the unit circle. Euler simply gave us a way to carry both shadows in one number.</p>
+
+<h2>3. The FFT: How Many Hops to Get Back Home?</h2>
+
+<p>The FFT's fundamental question: <em>"How many complete cycles happened inside my N-sample record?"</em></p>
+
+<p>If your signal advances 0.1 cycle per sample, then across <code>N</code> samples you have advanced:</p>
+
+<div class="math">
+  Total cycles in record = 0.1 &times; N
+</div>
+
+<p>FFT bin <code>k</code> asks: <em>"Does this signal contain exactly k complete cycles?"</em></p>
+
+<p><strong>For N = 1000:</strong> 100 complete cycles &rarr; bin 100 is hot &rarr; that is your 10 kHz tone.</p>
+
+<p><strong>For N = 1024:</strong> 102.4 cycles &rarr; not an integer &rarr; energy smears across bins 102 and 103. That is <strong>leakage</strong> &mdash; your signal did not fit neatly into the record.</p>
+
+<div class="voice">
+  <strong>The Sonic Labs framing:</strong> "The FFT carries a bag of tuning forks spaced f<sub>s</sub>/N apart. It holds each one up to your signal and asks, 'Do you sing my note?' When your signal matches one of these forks exactly, it sings back loud and clear. When it's off-pitch, a few neighboring forks rattle instead."
+</div>
+
+<h2>4. Coherent Sampling: The Integer Cycle Condition</h2>
+
+<p><strong>Definition:</strong> the signal completes an integer number of full cycles inside your sample record.</p>
+
+<div class="math">
+  f<sub>signal</sub> / f<sub>s</sub> = M / N
+</div>
+
+<p>where <code>M</code> = integer number of cycles and <code>N</code> = total samples.</p>
+
+<p>This is <strong>not</strong> "f<sub>s</sub> is an integer multiple of f<sub>signal</sub>." That is a special case, not the definition.</p>
+
+<h3>Your example (the easy case)</h3>
+
+<p>f<sub>0</sub> = 10 kHz, f<sub>s</sub> = 100 kHz, N = 1000. M = 100 complete cycles &rarr; coherent &rarr; clean spike at bin 100. Here f<sub>s</sub> = 10 &times; f<sub>0</sub>, so the integer-multiple condition happens to hold.</p>
+
+<h3>Counterexample (where the "integer multiple" definition breaks)</h3>
+
+<p>f<sub>0</sub> = 10 kHz, N = 1024 (a power of two, which FFTs love). For M = 100 cycles:</p>
+
+<div class="math">
+  f<sub>s</sub> = (10,000 &times; 1024) / 100 = 102,400 Hz
+</div>
+
+<p>f<sub>s</sub> = 102.4 kHz &mdash; <strong>not</strong> an integer multiple of 10 kHz. Yet it is perfectly coherent: 100 complete cycles in 1024 samples. The FFT sees a seamless loop and gives a clean spike.</p>
+
+<div class="voice">
+  <strong>The Sonic Labs framing:</strong> "Coherent sampling isn't about the strobe rate being a neat multiple of the car's lap time. It's about the car crossing the finish line exactly as you close your photo album."
+</div>
+
+<h2>5. Windowing: The Hann Window</h2>
+
+<h3>Why window?</h3>
+
+<p>The FFT assumes your N-sample record repeats forever. If you cut off mid-cycle, the join between end and beginning is a sharp discontinuity. The FFT sees that as high-frequency junk &mdash; sidelobes.</p>
+
+<h3>What the Hann window does</h3>
+
+<p>Gentle fade-in and fade-out at the edges. It forces the signal to zero at the boundaries, so when the record repeats, there is no discontinuity.</p>
+
+<h3>The trade-off</h3>
+
+<p>Fading the edges throws away some information &rarr; broader peak (wider main lobe). But you kill the sharp discontinuity &rarr; sidelobes drop way down.</p>
+
+<h3>Your plot, re-read</h3>
+
+<ul>
+  <li><strong>Peak at ~10 kHz:</strong> the real tone, broadened by Hann convolution</li>
+  <li><strong>Peak at ~90 kHz:</strong> the negative frequency image at f<sub>s</sub> &minus; f<sub>0</sub> (100 &minus; 10 = 90 kHz)</li>
+  <li><strong>Tiny wiggles 20&ndash;80 kHz:</strong> residual sidelobe energy, down ~40&ndash;50 dB</li>
+</ul>
+
+<h3>Hann window properties</h3>
+
+<table>
+  <tr>
+    <th>Property</th>
+    <th>Hann</th>
+    <th>Rectangular (for contrast)</th>
+  </tr>
+  <tr>
+    <td>Coherent gain</td>
+    <td>&asymp; 0.5</td>
+    <td>1.0</td>
+  </tr>
+  <tr>
+    <td>First sidelobe</td>
+    <td>&asymp; &minus;31 dB</td>
+    <td>&asymp; &minus;13 dB</td>
+  </tr>
+  <tr>
+    <td>Main lobe width</td>
+    <td>&asymp; 2&times; rectangular</td>
+    <td>Baseline</td>
+  </tr>
+</table>
+
+<h3>Magnitude scaling to recover true amplitude</h3>
+
+<div class="math">
+  A = (4 &times; |X[k]|) / N
+</div>
+
+<p>The factor of 4 comes from: 2 for the energy split between positive and negative frequencies, and 2 for the Hann window's 0.5 coherent gain.</p>
+
+<h2>6. Nyquist: The Cliff Edge, Not the Design Target</h2>
+
+<p><strong>The theorem:</strong> f<sub>s</sub> &gt; 2 &times; f<sub>max</sub> (strictly greater than).</p>
+
+<p>Why sample a 10 kHz signal at 100 kHz? You are oversampling (5&times;). The practical reasons:</p>
+
+<table>
+  <tr>
+    <th>Reason</th>
+    <th>What it buys you</th>
+  </tr>
+  <tr>
+    <td>Anti-aliasing filter</td>
+    <td>A gentle, cheap analog filter instead of an impossible brick-wall</td>
+  </tr>
+  <tr>
+    <td>Processing gain / SNR</td>
+    <td>~3 dB SNR improvement per octave of oversampling</td>
+  </tr>
+  <tr>
+    <td>Time resolution</td>
+    <td>10 µs vs. 50 µs at bare Nyquist</td>
+  </tr>
+  <tr>
+    <td>Spectral leakage mitigation</td>
+    <td>More samples = finer bins = easier coherent sampling</td>
+  </tr>
+</table>
+
+<div class="voice">
+  <strong>The mental model:</strong> Nyquist is the cliff edge. You sample at 100 kHz so you can stand way back from the edge with a cheap filter, not teeter on the edge with an expensive one.
+</div>
+
+<h3>About that 90 kHz image</h3>
+
+<p>For a real-valued signal, sampling creates spectral replicas (images) at every integer multiple of f<sub>s</sub>. The negative frequency at &minus;10 kHz gets shifted up by f<sub>s</sub> and lands at 90 kHz. Had you sampled at 20 kHz, that image would appear at 10 kHz &mdash; <strong>right on top of your signal</strong>.</p>
+
+<h2>7. The Two-Sided Spectrum</h2>
+
+<p>Your plot shows 0 &rarr; f<sub>s</sub> (all N bins). This makes the conjugate symmetry obvious:</p>
+
+<ul>
+  <li>Bin <code>k</code> = 10 kHz (positive frequency)</li>
+  <li>Bin <code>N &minus; k</code> = 90 kHz (negative frequency, folded up)</li>
+</ul>
+
+<p>For a single-sided spectrum (0 &rarr; f<sub>s</sub>/2):</p>
+
+<ul>
+  <li>Keep bins 0 to N/2</li>
+  <li>Multiply bins 1 to N/2&minus;1 by 2 (to account for folded negative energy)</li>
+  <li>DC (bin 0) and Nyquist (bin N/2) stay as-is</li>
+</ul>
+
+<hr>
+
+<div class="footer">
+  <p>Compiled from a Sonic Labs learning journey. Intuition first; formalism as refined compression.</p>
+  <p><a href="https://SonicLabs.co.za">SonicLabs.co.za</a></p>
+</div>
+
+</div>
+
+</body>
+</html>
