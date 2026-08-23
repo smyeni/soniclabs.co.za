@@ -247,22 +247,24 @@
   </p>
 </div>
 
-<h2>1. Digital Frequency: How Much of the Cycle Did We Miss?</h2>
-
+<h2>1. Digital Frequency: How Much of the Cycle Did We Miss - And Why Should We care?</h2>
+<p>While we were not looking (not sampling), what did the analogue signal do, or how far did its phase progress?</p>p>
 <p>Picture this - Every time the ADC takes a sample, the analog signal has moved forward (from the previous sampling instant) by some fraction of its own full cycle. That fraction <em>is</em> the digital frequency.</p>
 
 <p><strong>Your running example:</strong> a 10 kHz tone sampled at 100 kHz. The signal's period is 100 µs; the sampler visits every 10 µs. Each sample catches the sine <strong>one-tenth of a cycle further along</strong> than the last. The digital frequency is therefore <strong>0.1 cycles per sample</strong> &mdash; or 36&deg; per sample, or &pi;/5 radians per sample. Same thing, different clothes.</p>
 
-<p>The formula, derived from intuition rather than decreed from above:</p>
+<p>At Sonic Labs, wherever/whenever possible, we try build the intuition (the feel), before we compress all that in math.
+  The formula, derived from intuition rather than decreed from above:</p>
 
 <div class="math">
   T<sub>sampler</sub> / T<sub>signal</sub> = (1/f<sub>s</sub>) / (1/f<sub>0</sub>) = f<sub>0</sub> / f<sub>s</sub>
 </div>
 
-<p>This ratio quantifies how rapidly we are tracking the signal.</p>
+<p>This ratio quantifies, or signals to us, how tightly we are tracking the signal's transitions.</p>
 
 <div class="voice">
-  <strong>The Sonic Labs framing:</strong> "The lazier the sampler, the bigger the digital frequency. The more rapid the sampler, the tighter the visits back to the signal &mdash; you're basically stalking the signal."
+  <strong>The Sonic Labs framing:</strong> "The lazier the sampler, the wider the digital frequency - the sampler is too casual, giving the signal more time to advance inbetween the sparsely positioned sampling instant. 
+  The more rapid the sampler, the tighter the visits back to the signal to sample it&mdash; you're basically stalking the signal - giving it little chance to move significantly before you sample it again and again."
 </div>
 
 <table>
