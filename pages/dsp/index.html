@@ -233,6 +233,7 @@
   }
 </style>
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 
@@ -247,9 +248,11 @@
   </p>
 </div>
 
-<h2>1. Digital Frequency: How Much of the Signal's Cycle Did We Miss - And Why Should We care?</h2>
-<p>While we were not looking (not sampling), what did the analogue signal do, or how far did its phase advance?</p>
-<p>Picture this - Every time the ADC takes a sample, the analog signal has moved forward (from the previous sampling instant) by some fraction of its own full cycle. That fraction <em>is</em> the digital frequency.</p>
+<h2>1. Digital Frequency: How Much of the Signal's Cycle Did We Miss &mdash; And Why Should We Care?</h2>
+
+<p><strong>Digital frequency</strong> is the fractional travel a signal gets to make in-between sampling instants, expressed as a fraction of its wavelength (360&deg;).</p>
+
+<p>While we were not looking &mdash; while the sampler was off doing something else &mdash; the analogue signal kept moving. When the ADC finally returns for its next sample, the signal has advanced by some slice of its own full cycle. That slice, that fraction, <em>is</em> the digital frequency.</p>
 
 <p><strong>Your running example:</strong> a 10 kHz tone sampled at 100 kHz. The signal's period is 100 µs; the sampler (ADC) pays our signal a visit every 10 µs to take sample. Each sample catches the sine <strong>one-tenth of a cycle</strong> further down as measured from the most recent sampling instant. The digital frequency is therefore <strong>0.1 cycles per sample</strong> &mdash; or 36&deg; per sample, or &pi;/5 radians per sample. Same thing, different clothes. It takes the instrument or engineer 10% of the complete signal cycle to come back for another measurement - we don't care what the signal's frequency is, all we know is every 10% of it's cycle we are back measuring, again and again until our buffer is full</p>
 
@@ -320,13 +323,15 @@
 
 <h2>3. The FFT: How Many Hops to Get Back Home?</h2>
 
-<p>The FFT's fundamental question: <em>"How many complete cycles happened inside my N-sample record?"</em></p>
+<p>The FFT's fundamental question: <em>"How many complete signal laps did the sampler acquire inside my N-sample window?"</em></p>
 
-<p>If your signal advances 0.1 cycle per sample, then across <code>N</code> samples you have advanced:</p>
+<p>From Section 1, the digital frequency of our 10 kHz signal sampled at 100 kHz is 0.1 cycles per sample &mdash; the signal advances one-tenth of a lap between each visit from the sampler. Across <code>N</code> samples, the total laps accumulated are:</p>
 
 <div class="math">
-  Total cycles in record = 0.1 &times; N
+  Total signal laps in window = (digital frequency) &times; N = 0.1 &times; N
 </div>
+
+<p>If that product has a fractional part, the signal does not land cleanly on an FFT bin. The last sample catches the signal mid-lap, and when the record wraps around to repeat, there is a jump &mdash; a discontinuity the FFT reads as extra frequency content. That is <strong>leakage</strong>.</p>
 
 <p>FFT bin <code>k</code> asks: <em>"Does this signal contain exactly k complete cycles?"</em></p>
 
@@ -368,7 +373,66 @@
   <strong>The Sonic Labs framing:</strong> "Coherent sampling isn't about the strobe rate being a neat multiple of the car's lap time. It's about the car crossing the finish line exactly as you close your photo album."
 </div>
 
-<h2>5. Windowing: The Hann Window</h2>
+<h2>5. Hardware Efficiency: Don't Let Your ADC Run Laps on the Same Tarmac</h2>
+
+<p>Here is the hardware engineer's gut punch, straight from the math above:</p>
+
+<p>The denominator of your reduced digital-frequency fraction is your <strong>unique phase budget</strong>. That is how many distinct angles around the unit circle your sampler will ever see. Everything beyond that is a repeat &mdash; same phase, same information, wasted memory.</p>
+
+<div class="math">
+  Digital frequency = M / N<sub>reduced</sub> &nbsp;&rArr;&nbsp; N<sub>reduced</sub> unique phases
+</div>
+
+<table>
+  <tr>
+    <th>Digital freq</th>
+    <th>Reduced fraction</th>
+    <th>Unique phases</th>
+    <th>Hardware reality</th>
+  </tr>
+  <tr>
+    <td>0.1</td>
+    <td>1 / 10</td>
+    <td>10</td>
+    <td>Buffer of 1000 = 990 wasted slots (same 10 angles, 100&times; over)</td>
+  </tr>
+  <tr>
+    <td>0.5</td>
+    <td>1 / 2</td>
+    <td>2</td>
+    <td>Buffer of 1024 = 1022 wasted slots</td>
+  </tr>
+  <tr>
+    <td>0.25</td>
+    <td>1 / 4</td>
+    <td>4</td>
+    <td>Buffer of 1024 = 1020 wasted slots</td>
+  </tr>
+  <tr>
+    <td>0.09765625</td>
+    <td>25 / 256</td>
+    <td>256</td>
+    <td>Buffer of 1024 = each phase repeated 4&times;</td>
+  </tr>
+</table>
+
+<h3>The engineering trade-off</h3>
+
+<p>You have three levers:</p>
+
+<ol>
+  <li><strong>Pick f<sub>s</sub> so the fraction is "tight"</strong> (small denominator) &rarr; tiny buffer, all unique phases, cheap hardware.</li>
+  <li><strong>Pick N equal to the denominator</strong> &rarr; minimal buffer for full phase coverage, then stop. Go to the beer garden.</li>
+  <li><strong>Overspend on buffer</strong> &rarr; redundant phase samples, but you buy finer FFT bins (frequency resolution).</li>
+</ol>
+
+<p>The FFT wants N samples to give you N/2 frequency bins. But the <em>signal itself</em> only needs denominator-many unique phases to be fully characterised. Everything else is the tax you pay for spectral resolution.</p>
+
+<div class="voice">
+  <strong>The Sonic Labs framing:</strong> "Don't let your ADC run laps around the same patch of tarmac. If the signal's phase map repeats after 10 samples, kill the buffer at 10. Or accept that you're buying frequency resolution with redundant hardware."
+</div>
+
+<h2>6. Windowing: The Hann Window</h2>
 
 <h3>Why window?</h3>
 
@@ -423,7 +487,7 @@
 
 <p>The factor of 4 comes from: 2 for the energy split between positive and negative frequencies, and 2 for the Hann window's 0.5 coherent gain.</p>
 
-<h2>6. Nyquist: The Cliff Edge, Not the Design Target</h2>
+<h2>7. Nyquist: The Cliff Edge, Not the Design Target</h2>
 
 <p><strong>The theorem:</strong> f<sub>s</sub> &gt; 2 &times; f<sub>max</sub> (strictly greater than).</p>
 
@@ -460,7 +524,7 @@
 
 <p>For a real-valued signal, sampling creates spectral replicas (images) at every integer multiple of f<sub>s</sub>. The negative frequency at &minus;10 kHz gets shifted up by f<sub>s</sub> and lands at 90 kHz. Had you sampled at 20 kHz, that image would appear at 10 kHz &mdash; <strong>right on top of your signal</strong>.</p>
 
-<h2>7. The Two-Sided Spectrum</h2>
+<h2>8. The Two-Sided Spectrum</h2>
 
 <p>Your plot shows 0 &rarr; f<sub>s</sub> (all N bins). This makes the conjugate symmetry obvious:</p>
 
@@ -477,6 +541,57 @@
   <li>DC (bin 0) and Nyquist (bin N/2) stay as-is</li>
 </ul>
 
+<h2>9. The Dot Product &mdash; Our Secret to Visualizing Sampled Data Spectral Analysis</h2>
+
+<div class="voice">
+  Imagine two side-by-side discs rotating at different speeds. There will be relative motion between them. As the two disc speeds approach each other, the relative motion will decrease until it's zero when they are synchronized &mdash; think your clutch/flywheel scenario as you take off in your spirited GTi. Imagine we now draw a radial line on each disc. At lockup, the angle those lines subtend is constant &mdash; ideally zero. This is the mechanical analog of the phasor alignment the DFT hunts for to tell if the signal does have a component at that frequency.
+</div>
+
+<h3>The mechanical picture</h3>
+
+<p>Your signal is <strong>Disc A</strong>, spinning at its own rate. The FFT's reference tone for bin <code>k</code> is <strong>Disc B</strong>, spinning at frequency <code>k &middot; f<sub>s</sub>/N</code>. The DFT places them side by side and asks: <em>"Do these two spin at the same rate?"</em></p>
+
+<ul>
+  <li><strong>Different speeds</strong> &mdash; the radial lines sweep past each other continuously. Over the observation window, the alignment averages to nothing. The dot product &rarr; 0.</li>
+  <li><strong>Same speed, different phase</strong> &mdash; the radial lines maintain a fixed angle. The dot product measures the cosine of that angle. Maximum when aligned (0&deg;), zero when orthogonal (90&deg;).</li>
+  <li><strong>Same speed, same phase</strong> &mdash; radial lines overlap perfectly. Every sample reinforces the last. The dot product &rarr; maximum magnitude.</li>
+</ul>
+
+<h3>The clutch engagement</h3>
+
+<p>As you release the clutch, engine speed and wheel speed converge. The shudder you feel is <strong>beating</strong> &mdash; the periodic reinforcement and cancellation as the two speeds slip past each other. In spectral terms, this is <strong>leakage</strong>: two close frequencies creating an interference pattern. At lockup, the relative phase is frozen. The vibration stops. The DFT sees a single, clean spike.</p>
+
+<h3>The mathematical lockup</h3>
+
+<p>The DFT is a bank of dot products. For each bin <code>k</code>:</p>
+
+<div class="math">
+  X[k] = &Sigma;<sub>n=0</sub><sup>N&minus;1</sup> x[n] &middot; e<sup>&minus;j2&pi;kn/N</sup>
+</div>
+
+<ul>
+  <li><code>x[n]</code> is your signal disc, frozen at instant <code>n</code>.</li>
+  <li><code>e<sup>&minus;j2&pi;kn/N</sup></code> is the reference disc, rotated to its position at instant <code>n</code>.</li>
+  <li>The multiplication <code>x[n] &middot; e<sup>&minus;j2&pi;kn/N</sup></code> is the <strong>projection at that instant</strong>: "how aligned are the radial lines right now?"</li>
+  <li>The summation <strong>accumulates</strong> these projections over the entire window.</li>
+</ul>
+
+<p>The result is a <strong>complex number</strong>. Its magnitude tells you how much of frequency <code>k</code> is present. Its angle tells you the phase offset between signal and reference at lockup.</p>
+
+<h3>Why orthogonality matters</h3>
+
+<p>When the signal and reference frequencies are different, the product <code>x[n] &middot; e<sup>&minus;j2&pi;kn/N</sup></code> traces a <strong>closed polygon</strong> in the complex plane. The vector sum closes on itself &rarr; net zero. This is the <strong>orthogonality</strong> of the DFT basis: distinct frequencies are geometrically perpendicular in N-dimensional complex space.</p>
+
+<p>When frequencies match, the product traces a <strong>straight line</strong> in the same direction &rarr; the vectors stack head-to-tail &rarr; maximum length.</p>
+
+<div class="voice">
+  <strong>The Sonic Labs framing:</strong> "The DFT is not magic. It is simply a mechanic holding a strobe light to two discs, checking whether they lock up. If they do, he writes down how big the alignment is and what angle the timing marks sit at. That's your magnitude and phase."
+</div>
+
+<h3>The Hann window revisited</h3>
+
+<p>Remember the Hann window fades the edges to zero? In the gear picture, it's like <strong>gently engaging the clutch</strong> instead of dumping it. The abrupt edge discontinuity (rectangular window) is a violent clutch dump &mdash; high-frequency shudder everywhere. The Hann window smooths the engagement, letting the discs settle into lockup without the mechanical shock.</p>
+
 <hr>
 
 <div class="footer">
@@ -488,3 +603,4 @@
 
 </body>
 </html>
+
