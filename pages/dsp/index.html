@@ -583,6 +583,7 @@
 <p>When the signal and reference frequencies are different, the product <code>x[n] &middot; e<sup>&minus;j2&pi;kn/N</sup></code> traces a <strong>closed polygon</strong> in the complex plane. The vector sum closes on itself &rarr; net zero. This is the <strong>orthogonality</strong> of the DFT basis: distinct frequencies are geometrically perpendicular in N-dimensional complex space.</p>
 
 <p>When frequencies match, the product traces a <strong>straight line</strong> in the same direction &rarr; the vectors stack head-to-tail &rarr; maximum length.</p>
+<p>The signal has a phase-advance rate. Each DFT bin sends a chaser through the same samples at a particular phase-advance rate. The bin that stays in step with the signal's phase advance accumulates coherently.</p>
 
 <div class="voice">
   <strong>The Sonic Labs framing:</strong> "The DFT is not magic. It is simply a mechanic holding a strobe light to two discs, checking whether they lock up. If they do, he writes down how big the alignment is and what angle the timing marks sit at. That's your magnitude and phase."
