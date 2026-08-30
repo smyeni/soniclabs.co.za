@@ -584,7 +584,111 @@
 
 <p>When frequencies match, the product traces a <strong>straight line</strong> in the same direction &rarr; the vectors stack head-to-tail &rarr; maximum length.</p>
 <p>The signal has a phase-advance rate. Each DFT bin sends a chaser through the same samples at a particular phase-advance rate. The bin that stays in step with the signal's phase advance accumulates coherently.</p>
+<section class="fft-god-equations">
 
+<h3>The Two Equations Behind the FFT</h2>
+
+    <p>
+        The radix-2 FFT begins by separating the DFT into contributions
+        from the <strong>even-indexed</strong> and <strong>odd-indexed</strong>
+        samples.
+    </p>
+
+    <div class="equation-card">
+        <div class="equation-number">Equation 154</div>
+
+        <div class="equation">
+            X[k] = E[k] + W<sub>N</sub><sup>k</sup> O[k]
+        </div>
+
+        <p class="equation-description">
+            For the first half of the frequency bins, the frequency hunter
+            combines the contribution from the even samples with the
+            phase-rotated contribution from the odd samples.
+        </p>
+
+        <div class="sonic-interpretation">
+            <strong>Sonic Labs interpretation:</strong><br>
+            The hunter has already accumulated the even throws and the odd
+            throws separately. It now rotates the odd pile by the required
+            phase and adds the two piles at the frequency destination.
+        </div>
+    </div>
+
+
+    <div class="equation-card">
+        <div class="equation-number">Equation 155</div>
+
+        <div class="equation">
+            X[k + N/2] = E[k] - W<sub>N</sub><sup>k</sup> O[k]
+        </div>
+
+        <p class="equation-description">
+            The corresponding second-half frequency bin uses exactly the
+            same even and odd intermediate results, but the odd contribution
+            arrives with a 180&deg; phase reversal.
+        </p>
+
+        <div class="sonic-interpretation">
+            <strong>Sonic Labs interpretation:</strong><br>
+            Same two piles. Same back-thrower. But the second destination
+            sees the odd pile after a 180&deg; reversal — so the summer becomes
+            a subtraction.
+        </div>
+    </div>
+
+
+    <div class="fft-why">
+        <h3>Why the Pair Works</h3>
+
+        <p>
+            The key identity is:
+        </p>
+
+        <div class="equation">
+            W<sub>N</sub><sup>k + N/2</sup>
+            =
+            W<sub>N</sub><sup>k</sup>
+            W<sub>N</sub><sup>N/2</sup>
+        </div>
+
+        <p>
+            Since
+        </p>
+
+        <div class="equation">
+            W<sub>N</sub><sup>N/2</sup>
+            =
+            e<sup>-j&pi;</sup>
+            =
+            -1
+        </div>
+
+        <p>
+            therefore:
+        </p>
+
+        <div class="equation">
+            W<sub>N</sub><sup>k + N/2</sup>
+            =
+            -W<sub>N</sub><sup>k</sup>
+        </div>
+
+        <div class="sonic-aha">
+            <strong>THE SONIC LABS AHA:</strong>
+            <br><br>
+            We do not perform the throwing work twice.
+            <br><br>
+            The same intermediate even and odd accumulations feed two
+            frequency destinations. One destination adds them; the other
+            subtracts them.
+            <br><br>
+            <strong>That is the butterfly.</strong>
+        </div>
+    </div>
+
+</section>
+  
 <div class="voice">
   <strong>The Sonic Labs framing:</strong> "The DFT is not magic. It is simply a mechanic holding a strobe light to two discs, checking whether they lock up. If they do, he writes down how big the alignment is and what angle the timing marks sit at. That's your magnitude and phase."
 </div>
