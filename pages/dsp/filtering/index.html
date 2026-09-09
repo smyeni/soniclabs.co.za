@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>The DFT — Sonic Labs</title>
+
+    <meta name="description"
+          content="The Sonic Way to understanding the Discrete Fourier Transform through phasors, rotation, scaling and interference.">
+
+    <style>
+        :root {
+            --bg: #0b0f14;
+            --surface: #111820;
+            --surface-light: #17212b;
+            --text: #e8edf2;
+            --muted: #9aa7b3;
+            --accent: #55b8ff;
+            --accent-2: #7ee787;
+            --border: #263340;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont,
+                         "Segoe UI", sans-serif;
+            line-height: 1.7;
+        }
+
+        header {
+            border-bottom: 1px solid var(--border);
+            background: rgba(11, 15, 20, 0.95);
+        }
+
+        .nav {
+            max-width: 1100px;
+            margin: auto;
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            font-weight: 700;
+            letter-spacing: 0.08em;
+        }
+
+        .brand span {
+            color: var(--accent);
+        }
+
+        nav a {
+            color: var(--muted);
+            text-decoration: none;
+            margin-left: 24px;
+            font-size: 0.95rem;
+        }
+
+        nav a:hover {
+            color: var(--text);
+        }
+
+        main {
+            max-width: 1100px;
+            margin: auto;
+            padding: 70px 24px 100px;
+        }
+
+        .hero {
+            max-width: 850px;
+            margin-bottom: 70px;
+        }
+
+        .eyebrow {
+            color: var(--accent);
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        h1 {
+            font-size: clamp(2.8rem, 7vw, 5rem);
+            line-height: 1.05;
+            margin: 0 0 28px;
+        }
+
+        .preamble {
+            font-size: 1.35rem;
+            line-height: 1.65;
+            color: #cbd5df;
+            border-left: 3px solid var(--accent);
+            padding-left: 24px;
+        }
+
+        section {
+            margin-top: 80px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            font-size: 1.35rem;
+            margin-top: 35px;
+        }
+
+        p {
+            color: #c3ccd5;
+        }
+
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 25px;
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+
+        .formula {
+            margin: 30px 0;
+            padding: 25px;
+            background: #080c10;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow-x: auto;
+            text-align: center;
+            font-family: "Times New Roman", serif;
+            font-size: 1.4rem;
+        }
+
+        .idea {
+            background: var(--surface-light);
+            border-radius: 10px;
+            padding: 28px;
+            margin-top: 30px;
+        }
+
+        .idea strong {
+            color: var(--accent-2);
+        }
+
+        .roadmap {
+            display: grid;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .roadmap-item {
+            display: flex;
+            gap: 20px;
+            align-items: baseline;
+            padding: 18px 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .number {
+            color: var(--accent);
+            font-weight: 700;
+            min-width: 30px;
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 35px 24px;
+            color: var(--muted);
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 750px) {
+            .concept-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav a {
+                margin-left: 12px;
+            }
+
+            .preamble {
+                font-size: 1.15rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="nav">
+        <div class="brand">SONIC <span>LABS</span></div>
+
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="#intuition">Intuition</a>
+            <a href="#dft">DFT</a>
+            <a href="#roadmap">Roadmap</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+
+    <section class="hero">
+
+        <div class="eyebrow">Digital Signal Processing</div>
+
+        <h1>The DFT</h1>
+
+        <p class="preamble">
+            You don't necessarily need to memorize every DSP derivation
+            to develop strong intuition. If you can see phasors, understand
+            complex multiplication as rotation and scaling, and understand
+            vector addition as interference, a surprisingly large part of
+            DSP becomes tangible.
+        </p>
+
+    </section>
+
+
+    <section id="intuition">
+
+        <div class="eyebrow">The Sonic Way</div>
+
+        <h2>Start with the geometry</h2>
+
+        <p>
+            Before diving into the DFT equation, it helps to understand
+            what the mathematics is actually doing.
+        </p>
+
+        <div class="concept-grid">
+
+            <div class="card">
+                <h3>Phasors</h3>
+                <p>
+                    A complex number can be viewed as a rotating vector
+                    in the complex plane. Its length represents magnitude
+                    and its angle represents phase.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>Multiplication</h3>
+                <p>
+                    Complex multiplication combines scaling with rotation.
+                    Multiplying by a unit phasor rotates a vector through
+                    a particular angle.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>Addition</h3>
+                <p>
+                    Adding phasors is vector addition. Depending on their
+                    relative phases, they reinforce one another or cancel.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="idea">
+            <strong>The key intuition:</strong>
+            the DFT repeatedly rotates and adds phasors, asking how strongly
+            the sampled signal aligns with a particular frequency.
+        </div>
+
+    </section>
+
+
+    <section id="dft">
+
+        <div class="eyebrow">The Mathematics</div>
+
+        <h2>The Discrete Fourier Transform</h2>
+
+        <p>
+            Given a sequence of N samples, the DFT calculates how strongly
+            the signal corresponds to each of N discrete frequency bins.
+        </p>
+
+        <div class="formula">
+            X[k] = ∑ x[n] e<sup>−j2πkn/N</sup>
+        </div>
+
+        <p>
+            The exponential term is a rotating phasor. For each frequency
+            bin, the DFT applies a different phase-advance rate to the
+            samples and sums the resulting vectors.
+        </p>
+
+        <h3>Each bin is a phase chaser</h3>
+
+        <p>
+            Think of every DFT bin as a chaser travelling around the unit
+            circle at its own particular phase-advance rate.
+        </p>
+
+        <p>
+            When the chaser's rotation matches a frequency present in the
+            signal, the resulting phasors tend to point in a common
+            direction. They reinforce one another and produce a large
+            magnitude.
+        </p>
+
+        <p>
+            When the rotation does not match, the phasors tend to spread
+            around the circle and cancel one another.
+        </p>
+
+        <div class="idea">
+            <strong>That is the DFT in geometric terms:</strong>
+            rotate, add, and observe whether the vectors reinforce or
+            cancel.
+        </div>
+
+    </section>
+
+
+    <section id="roadmap">
+
+        <div class="eyebrow">Learning Path</div>
+
+        <h2>Where we're going</h2>
+
+        <div class="roadmap">
+
+            <div class="roadmap-item">
+                <div class="number">01</div>
+                <div>
+                    <strong>Phasors</strong>
+                    <p>Visualising magnitude and phase on the complex plane.</p>
+                </div>
+            </div>
+
+            <div class="roadmap-item">
+                <div class="number">02</div>
+                <div>
+                    <strong>Complex multiplication</strong>
+                    <p>Rotation and scaling through complex multiplication.</p>
+                </div>
+            </div>
+
+            <div class="roadmap-item">
+                <div class="number">03</div>
+                <div>
+                    <strong>Vector addition</strong>
+                    <p>Understanding constructive and destructive interference.</p>
+                </div>
+            </div>
+
+            <div class="roadmap-item">
+                <div class="number">04</div>
+                <div>
+                    <strong>The DFT</strong>
+                    <p>Seeing the DFT as a bank of rotating phase chasers.</p>
+                </div>
+            </div>
+
+            <div class="roadmap-item">
+                <div class="number">05</div>
+                <div>
+                    <strong>Spectral leakage</strong>
+                    <p>Understanding why imperfect frequency alignment spreads energy.</p>
+                </div>
+            </div>
+
+            <div class="roadmap-item">
+                <div class="number">06</div>
+                <div>
+                    <strong>Windows</strong>
+                    <p>Understanding what windowing does geometrically.</p>
+                </div>
+            </div>
+
+            <div class="roadmap-item">
+                <div class="number">07</div>
+                <div>
+                    <strong>FFT</strong>
+                    <p>Discovering the computational redundancy hidden inside the DFT.</p>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    Sonic Labs · Digital Signal Processing · The Sonic Way
+</footer>
+
+</body>
+</html>
