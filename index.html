@@ -33,15 +33,15 @@
     </p>
             
       <p>
-      When you encounter a mathematical operation in engineering (think DSP or whatever field), don't merely ask how do I execute it? Ask: <strong>“What did the mathematician see that made this operation worth doing?”</strong>
+      When you encounter a mathematical operation in an equation (think DSP or whatever field), don't merely ask how do I execute it? I'd first look at it ans ask: <strong>“What did the mathematician see that made this operation (e.g. multiplication by a rotating phasor) worth doing?”</strong>
       <p>   
     <p> 
-      In the DFT, why are samples multiplied by a <strong>counter-rotating</strong> hunting phasor with bigger and bigger phase strides for each explored bin (what's the counter-rotation actually doing or undoing)?<br>
-      In FFT, why do samples have to be initially grouped into even and odd-indexed populations - enter the exponential-driven extra twiddle for odds.
+      In the inverse DFT equation, why are bin scores/summations multiplied by a <strong>counter-clockwise rotating</strong> phasor with bigger and bigger phase strides for each visited bin (what's the counter-rotation actually doing or undoing)?<br>
+      In FFT, why do samples have to be initially separated into even and odd-indexed sequences - what;s the end game? Enter the exponential-driven extra twiddle common to all odd-indexed samples.
     </p>
-    <p>I once looked at the oscilloscope signal trace. It was jumping all over the show, and fast.<br>
-    So the young me was like - haybo! But what does a Fourier spectrum mean or look like if the signal is time varying like this - surely the spectrum must be time varying too.
-      <br><br>I quietly backed off, disappointed at the feeling I was missing a point somewhere.
+    <p>As a new student of EE, I once looked at a live oscilloscope signal trace. It was jumping all over the screen, and fast.<br>
+    So the young me was like - No way! But what does a Fourier spectrum mean or look like if the signal is itself time varying like this - surely the spectrum must be time varying too.
+      <br><br>I quietly backed off, disappointed, feeling I was missing a point somewhere.
       <br>Enter wavelets - discovered through a research project we had two years later. They looked like time-aware Fourier spectra.
       <p>So I was like - picture a detective saying: "I'm not only interested at knowing who was at the crime scene (frequency components), in addition I wanna know who came and left when (when did those frequencies show up and faded)."
       <p>Again - If we have a sinusoidal Morlet wavelet, then <strong>What did the mathematician see that made another wavelet basis function worth creating?</strong></p>
